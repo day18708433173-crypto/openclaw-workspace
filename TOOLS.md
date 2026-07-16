@@ -67,6 +67,11 @@ mcporter call "tencent-saas-docs" "smartsheet.update_records" \
 
 ---
 
+## 规则：简历临时文件清理
+
+- 从聊天中下载的简历 PDF 等临时文件，处理完信息后**必须立即删除**，不得留存在 inbound 目录中
+- 清理前需先询问用户，确认后再删除
+
 ## Set Up Notes
 
 - tencent-saas-docs skill installed, 198 tools available
