@@ -10,11 +10,13 @@
 
 招聘助手 (Recruitment Assistant)
 
-### Core Responsibilities
-1. **招聘信息记录** — Record candidate info, job reqs, pipeline status
-2. **面试流程跟进** — Track full lifecycle from application to onboarding
-3. **招聘数据复盘** — Analyze recruitment data, provide insights
-4. **卡关键词：追问确认** — 候选人信息不完整或姓名重名 → 必须追问，不得推测
+工作流规则见 `skills/recruitment/SKILL.md`，表配置见 `TOOLS.md`。
+
+### Core Principles
+1. **操作唯一表** — 腾讯文档 saas.docs.qq.com，file_id = `PTfdpsNTAQbnqbRxOP`，不碰企微表
+2. **写表操作需 @机器人** — 不 @不写表
+3. **确认前禁写** — 简历解析未确认不写入
+4. **查重用姓名+岗位组合键** — 同名不同岗 = 不同候选流程（同名同岗 = 重复，不写入）
 
 ## Bootstrap
 
@@ -22,39 +24,26 @@ First conversation: 2026-07-16. Initial setup done. SOUL.md customized.
 
 ## Installed Skills
 
-- **tencent-saas-docs** — 腾讯文档 SaaS 版 (saas.docs.qq.com) — 198 tools
-  - Categories: smartcanvas, sheet, slide, doc, mind, flowchart, smartsheet, form, manage
-  - Token configured via `setup.sh tdoc_set_token`
-  - Env var: `TENCENT_DOCS_TOKEN` set at user level
-  - Token value: `06aee4bf29a5403dad70c9f40f60e1ef`
-  - Registered mcporter services: tencent-saas-docs, slide-mcp, doc-mcp, sheet-mcp
-- **recruitment** — 已删除（2026-07-16）。先用 tencent-saas-docs 原生能力测试，再评估是否需要专用 Skill。
+- **tencent-saas-docs** — 腾讯文档 SaaS 版 — 198 tools
+  - Env: `TENCENT_DOCS_TOKEN`
+  - mcporter services: tencent-saas-docs, slide-mcp, doc-mcp, sheet-mcp
+- **recruitment** — 招聘助手 Skill · 简历解析（2026-07-16 v2）
+  - 仅聚焦：收到 @消息中的 PDF/图片 → 提取字段 → 确认 → 写入
+  - 文件：`workspace/skills/recruitment/SKILL.md`
 
 ## System Architecture
 
-- **Candidate master data**: 腾讯文档智能表格 (Smart Sheet)
-  - 文档名：招聘表格
+- **Candidate master data**: 腾讯文档智能表格
   - URL：https://saas.docs.qq.com/smartsheet/DUFRmZHBzTlRBUWJucWJSeE9Q
   - file_id: `PTfdpsNTAQbnqbRxOP` | sheet_id: `BB08J2`
-  - 17 个字段，已配置在 TOOLS.md
-  - 手动写入/更新已验证通过（2026-07-16）
-- **Message entry point**: 企业微信内部群 (WeCom internal group chat) — 待配置
-- **Rule**: 写入前必须查重（姓名+岗位组合键）；信息不全先追问；创建时间字段禁写
+  - 17 字段，详见 TOOLS.md
+- **Message entry point**: 企业微信智能机器人（Agent 模式）
+  - botId: `aibYWP0iJ24_SFyO2Odc_faEiH6uJ3DYWTW`
+  - 插件版本：`@wecom/wecom-openclaw-plugin@20206.7.201`
+- **已验证**：手动写入/更新智能表（2026-07-16） | 4 条空记录已清理
 
-## Known Gaps (2026-07-16)
+## Known Gaps（待产品化）
 
-## Known Gaps（待测试后确认）
-
-基础链路已通（tencent-saas-docs → 智能表读写），待体验测试的功能：
-1. 自然语言写入/更新 — 是否稳定匹配字段、正确处理同名
-2. 查重与追问 — 同名多人、缺字段时行为
-3. 简历解析入库 — 附件→提取→确认→写入 完整链路
-4. 定时提醒 — HEARTBEAT.md 为空
-5. 可视化看板 + 对话复盘 — 未做
-6. 企业微信群聊接入 — 消息入口尚未配置
-
-已完成：
-- ✅ TOOLS.md 表配置固化（file_id/sheet_id/17字段映射/写入规则）
-- ✅ MEMORY.md 修正（不再写"未配置"）
-- ✅ 4 条空记录清理（2026-07-16）
-- ✅ 招聘专用 Skill 已删除，先用 tencent-saas-docs 原生能力测试
+1. 定时提醒 — HEARTBEAT.md 为空
+2. 可视化看板 + 对话复盘 — 漏斗/岗位进度/AI洞察
+3. PDF 扫描件/图片格式简历 — 无 OCR，需用户手动粘贴文字
