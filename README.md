@@ -1,6 +1,5 @@
 # 招聘提效场景 AI 应用方案
 
-**Demo 链接：** https://github.com/day18708433173-crypto/openclaw-workspace
 
 基于 [OpenClaw](https://docs.openclaw.ai) 的 AI 招聘助手，接入企业微信智能机器人，通过腾讯文档 MCP 操作智能表完成候选人信息录入、面试流程跟进和招聘数据复盘。
 
