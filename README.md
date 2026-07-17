@@ -95,84 +95,9 @@ workspace/
 
 ## 4. 配置腾讯文档
 
-腾讯文档通过 **mcporter** 代理 MCP 协议，需要注册 4 个 MCP 服务 + 获取 Token。
+参考 [https://docs.qq.com/scenario/open-claw.html?nlc=1](https://docs.qq.com/scenario/open-claw.html?nlc=1)，按页面引导完成授权即可。
 
-### 4.1 安装 mcporter
-
-```bash
-npm install -g mcporter@0.8.1
-mcporter --version
-# → 0.8.1
-```
-
-### 4.2 一键授权（推荐）
-
-workspace 内置了自动化脚本，一次性完成 Token 获取 + 4 个 MCP 服务注册：
-
-```bash
-cd ~/.openclaw/workspace/skills/tencent-saas-docs
-
-# 第一步：生成授权链接
-bash ./setup.sh tdoc_check_and_start_auth
-# → AUTH_REQUIRED:https://saas.docs.qq.com/scenario/open-claw.html?nlc=1&authType=1&code=...
-
-# 在浏览器打开链接，用 QQ/微信 扫码授权
-
-# 第二步：获取 Token 并自动注册所有 MCP 服务
-bash ./setup.sh tdoc_fetch_token
-# → TOKEN_READY ✓
-```
-
-> 这一步会自动注册 `tencent-saas-docs`、`slide-mcp`、`doc-mcp`、`sheet-mcp` 四个 MCP 服务。
-
-### 4.3 手动设置（跳过 OAuth）
-
-已知 Token，直接一步注册：
-
-```bash
-bash ./setup.sh tdoc_set_token "你的Token"
-```
-
-或者手动用 mcporter 注册四个服务：
-
-```bash
-TDOC_TOKEN="你的Token"
-
-mcporter config add "tencent-saas-docs" "https://saas.docs.qq.com/api/v6/open/agent/mcp" \
-    --header "Authorization=$TDOC_TOKEN" --transport http --scope home
-
-mcporter config add "slide-mcp" "https://saas.docs.qq.com/api/v6/slide/mcp" \
-    --header "Authorization=$TDOC_TOKEN" --transport http --scope home
-
-mcporter config add "doc-mcp" "https://saas.docs.qq.com/api/v6/doc/mcp" \
-    --header "Authorization=$TDOC_TOKEN" --transport http --scope home
-
-mcporter config add "sheet-mcp" "https://saas.docs.qq.com/api/v6/sheet/mcp" \
-    --header "Authorization=$TDOC_TOKEN" --transport http --scope home
-```
-
-> Token 获取地址：[https://saas.docs.qq.com/scenario/open-claw.html?nlc=1](https://saas.docs.qq.com/scenario/open-claw.html?nlc=1)
-
-### 4.4 验证
-
-```bash
-mcporter list
-# 应显示 4 个 healthy 的服务：tencent-saas-docs, slide-mcp, doc-mcp, sheet-mcp
-
-mcporter call "tencent-saas-docs" "smartsheet.list_records" \
-  file_id:PTfdpsNTAQbnqbRxOP sheet_id:BB08J2 limit:1
-# 正常返回 JSON 则一切就绪
-```
-
-### 4.5 故障排查
-
-| 错误码 | 原因 | 解决 |
-|--------|------|------|
-| `400006` | Token 鉴权失败 | 重新授权 |
-| `400007` | 调用次数耗尽 | 升级腾讯文档专业版 |
-| `expired` | Token 过期 | 重新获取 |
-| `not_authorized` | 未完成扫码 | 在浏览器中完成授权 |
-| Windows 上跑不了 bash | 没装 Git Bash | 用第 4.3 节手动 mcporter 命令代替 |
+> 授权后可实现企业微信机器人与腾讯文档的关联，支持创建、修改等操作。
 
 ---
 
