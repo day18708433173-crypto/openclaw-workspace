@@ -60,72 +60,50 @@ openclaw gateway status
 
 ## 2. 接入企业微信
 
+参考官方文档：[在本地终端部署 OpenClaw 并关联机器人](https://open.work.weixin.qq.com/help2/pc/cat?doc_id=21657)
+
 ### 2.1 创建企业微信智能机器人
 
 1. 登录 [企业微信管理后台](https://work.weixin.qq.com/wework_admin)
 2. 进入 **应用管理 → 智能机器人**
-3. 点击 **创建智能机器人**
-4. 选择 **Agent 模式**（不是 WebSocket 模式）
-5. 记录以下信息：
-   - **Bot ID**（机器人 ID）
-   - **Secret**（机器人密钥）
+3. 点击 **创建智能机器人**，选择 **Agent 模式**
+4. 创建完成后，在机器人详情页找到 **关联 OpenClaw** 区域
+5. 点击 **复制关联命令**，得到一条类似如下的命令：
 
-### 2.2 配置回调地址
+```
+openclaw channels add wecom --bot-id xxx --secret xxx --token xxx --aes-key xxx
+```
 
-在机器人详情页配置 **回调 URL**：
+> 这条命令由企业微信后台自动生成，已包含你的 Bot ID、Secret 等信息，无需手动填写。
+
+### 2.2 在本地终端执行关联命令
+
+在 PowerShell 中粘贴并执行刚才复制的命令：
+
+```powershell
+openclaw channels add wecom --bot-id xxx --secret xxx --token xxx --aes-key xxx
+```
+
+> 这一步会自动完成：启用 `wecom-openclaw-plugin` 插件、写入 `channels.wecom` 配置到 `openclaw.json`。
+
+### 2.3 配置回调地址（如需要）
+
+如果机器人需要接收消息回调，在管理后台配置 **回调 URL**：
 
 ```
 https://<你的服务器域名>:18789/plugins/wecom/agent
 ```
 
-> 本地开发用 ngrok：`ngrok http 18789`，把生成的 https 地址填到回调 URL。或用 Tailscale Funnel。
+> 本地开发用 ngrok：`ngrok http 18789`，把生成的 https 地址填入回调 URL。
 
-### 2.3 配置 openclaw.json
-
-```json
-{
-  "plugins": {
-    "entries": {
-      "wecom-openclaw-plugin": { "enabled": true }
-    },
-    "allow": ["wecom-openclaw-plugin"]
-  },
-  "channels": {
-    "wecom": {
-      "enabled": true,
-      "botId": "你的 Bot ID",
-      "secret": "你的 Secret"
-    }
-  },
-  "gateway": {
-    "mode": "local",
-    "port": 18789,
-    "bind": "loopback"
-  }
-}
-```
-
-> OpenClaw 启动时会自动安装 `wecom-openclaw-plugin`，无需手动 npm install。
-
-### 2.4 启动和测试
+### 2.4 验证
 
 ```bash
-# 安装 Gateway 服务（Windows 上用 schtasks，macOS 用 launchd，Linux 用 systemd）
-openclaw daemon install
-openclaw daemon start
-
-# 检查状态
 openclaw health
 # → 企业微信: configured ✓
 ```
 
-如果不想装系统服务，也可以前台运行：
-
-```bash
-openclaw gateway run
-```
-
-在企业微信里 @机器人 发一条消息，收到回复即为成功。
+在企业微信里 @机器人 发一条消息，收到回复即为接入成功。
 
 ---
 
