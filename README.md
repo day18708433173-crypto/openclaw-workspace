@@ -108,7 +108,13 @@ openclaw gateway status
 
 参考企业微信官方文档 **2.2.2 章节**：[在本地终端部署 OpenClaw 并关联机器人](https://open.work.weixin.qq.com/help2/pc/cat?doc_id=21657)
 
-### 3. 部署本工作区
+### 3. 配置腾讯文档
+
+参考 [https://docs.qq.com/scenario/open-claw.html?nlc=1](https://docs.qq.com/scenario/open-claw.html?nlc=1)，按页面引导完成授权。
+
+> 授权后可实现企业微信机器人与腾讯文档的关联，支持创建、修改等操作。
+
+### 4. 部署本工作区
 
 ```bash
 # 备份原工作区（如果有的话）
@@ -135,9 +141,3 @@ workspace/
 │   ├── recruitment-channel/SKILL.md    ← 渠道来源统计
 │   └── tencent-saas-docs/              ← 腾讯文档 MCP 操作指南 & setup.sh
 ```
-
-### 4. 配置腾讯文档
-
-参考 [https://docs.qq.com/scenario/open-claw.html?nlc=1](https://docs.qq.com/scenario/open-claw.html?nlc=1)，按页面引导完成授权。
-
-> 授权后可实现企业微信机器人与腾讯文档的关联，支持创建、修改等操作。
