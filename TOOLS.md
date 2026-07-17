@@ -27,7 +27,6 @@
 | `fhuQVX` | 二面面试官 | text | 可选 |
 | `fIDFz7` | 二面评价 | text | 可选 |
 | `fYT8aR` | 二面结果 | singleSelect | 可选，枚举：待安排/未通过/通过/取消 |
-| `fW0nTJ` | OFFER是否发放 | singleSelect | 可选，枚举：无需发放/暂未发放/已经发放 |
 | `fzlnrN` | OFFER是否接受 | singleSelect | 可选，枚举：待确认/已接受/未接受 |
 | `fAAuPt` | 最后更新时间 | dateTime | **Agent 每次写入/更新时必须同步更新**，格式同上面 |
 | `fQqtac` | 创建时间 | dateTime | **系统自动填充，Agent 不得手动写入** |
