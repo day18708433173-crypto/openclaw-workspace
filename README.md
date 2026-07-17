@@ -53,17 +53,17 @@ mcporter / MCP 协议
 
 以下为系统在真实企业微信群中的实测截图：
 
-![](images/demo_0.png)
-
-![](images/demo_1.png)
+![](images/demo_3.png)
 
 ![](images/demo_2.png)
 
-![](images/demo_3.png)
+![](images/demo_1.png)
 
-![](images/demo_11.png)
+![](images/demo_0.png)
 
 ![](images/demo_12.png)
+
+![](images/demo_11.png)
 
 ---
 
