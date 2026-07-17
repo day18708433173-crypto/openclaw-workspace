@@ -53,35 +53,17 @@ mcporter / MCP 协议
 
 以下为系统在真实企业微信群中的实测截图：
 
-**招聘智能表字段结构：**
+![](images/demo_0.png)
 
-![腾讯文档智能表字段](images/demo_0.png)
+![](images/demo_1.png)
 
-**场景一：简历基本信息录入**
+![](images/demo_2.png)
 
-用户发送 `简历 + 岗位 + 来源渠道`，机器人自动解析并写入智能表：
+![](images/demo_3.png)
 
-![简历录入](images/demo_1.png)
+![](images/demo_11.png)
 
-**场景二：候选人在招聘流程中的信息更新**
-
-用户发送面试流程信息，机器人自动更新对应节点状态：
-
-![流程更新](images/demo_2.png)
-
-**场景三：招聘数据统计与复盘**
-
-*3.1 招聘工作进度查询：*
-
-![招聘进度](images/demo_3.png)
-
-*3.2 复盘招聘各环节转化率（月度漏斗）：*
-
-![转化漏斗](images/demo_11.png)
-
-*3.3 招聘渠道复盘：*
-
-![渠道复盘](images/demo_12.png)
+![](images/demo_12.png)
 
 ---
 
