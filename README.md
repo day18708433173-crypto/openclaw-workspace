@@ -5,13 +5,12 @@
 ## 目录
 
 - [环境要求](#环境要求)
-- [1. 安装 OpenClaw](#1-安装-openclaw)
-- [2. 配置 AI 模型](#2-配置-ai-模型)
-- [3. 接入企业微信](#3-接入企业微信)
-- [4. 部署本工作区](#4-部署本工作区)
-- [5. 配置腾讯文档](#5-配置腾讯文档)
-- [6. 启动 & 验证](#6-启动--验证)
-- [7. 日常使用](#7-日常使用)
+- [1. 安装并初始化 OpenClaw](#1-安装并初始化-openclaw)
+- [2. 接入企业微信](#2-接入企业微信)
+- [3. 部署本工作区](#3-部署本工作区)
+- [4. 配置腾讯文档](#4-配置腾讯文档)
+- [5. 启动 & 验证](#5-启动--验证)
+- [6. 日常使用](#6-日常使用)
 
 ---
 
@@ -28,107 +27,40 @@
 
 ---
 
-## 1. 安装 OpenClaw
+## 1. 安装并初始化 OpenClaw
 
-```bash
-npm install -g openclaw
-openclaw --version
-# → OpenClaw 2026.7.1
-```
-
-安装后在用户目录生成 `~/.openclaw/` 文件夹：
-
-```
-~/.openclaw/
-├── openclaw.json          ← 主配置文件
-├── workspace/             ← Agent 工作区（Skill、记忆等）
-├── agents/                ← Agent 运行时数据
-└── exec-approvals.json    ← 命令执行权限（自动生成）
-```
-
----
-
-## 2. 配置 AI 模型
-
-本工作区使用 **DeepSeek**。OpenClaw 的 DeepSeek 插件已内置模型定义，无需手动配置模型参数。
-
-### 2.1 获取 API Key
-
-1. 注册 [DeepSeek 开放平台](https://platform.deepseek.com)
-2. 在 [API Keys](https://platform.deepseek.com/api_keys) 页面创建 Key
-3. 复制 Key 备用
-
-### 2.2 配置 openclaw.json
-
-在 `~/.openclaw/openclaw.json` 中添加：
-
-```json
-{
-  "plugins": {
-    "entries": {
-      "deepseek": { "enabled": true }
-    },
-    "allow": ["deepseek"]
-  },
-  "agents": {
-    "defaults": {
-      "model": {
-        "primary": "deepseek/deepseek-v4-flash"
-      }
-    }
-  },
-  "auth": {
-    "profiles": {
-      "deepseek:default": {
-        "provider": "deepseek",
-        "mode": "api_key"
-      }
-    }
-  }
-}
-```
-
-### 2.3 设置 API Key
-
-**Windows PowerShell：**
+在 **PowerShell** 中执行：
 
 ```powershell
-$env:DEEPSEEK_API_KEY = "sk-xxxxxxxxxxxxxxxx"
+# 安装
+npm install -g openclaw@latest
+
+# 运行配置向导
+openclaw onboard --install-daemon
 ```
 
-> 这是临时环境变量，关终端就没了。永久设置：在系统环境变量中添加 `DEEPSEEK_API_KEY`。
+第二条命令会进入交互式配置向导，按提示操作：
 
-**macOS / Linux（永久）：**
+1. **模型服务商** — 选择你有 API Key 的服务商（DeepSeek / OpenAI 等，推荐 DeepSeek）
+2. **输入 API Key** — 粘贴你的 Key（仅保存在本机，不会上传）
+3. **安装后台服务** — 选择**确认**，电脑开机后机器人自动保持在线
+4. 其他选项暂时保持默认即可
 
-```bash
-# 写入 shell 配置文件
-echo 'export DEEPSEEK_API_KEY="sk-xxxxxxxxxxxxxxxx"' >> ~/.bashrc
-source ~/.bashrc
+配置完成后验证：
+
+```powershell
+openclaw gateway status
+# 看到 Gateway 正在运行（running）即可
 ```
 
-### 2.4 换其他模型
-
-DeepSeek 插件内置了 `deepseek-v4-flash` / `deepseek-v4-pro` / `deepseek-chat` / `deepseek-reasoner` 四个模型，改 `agents.defaults.model.primary` 即可切换。
-
-用 OpenAI 的话，安装 OpenAI 插件后同理配置：
-
-```json
-{
-  "plugins": { "entries": { "openai": { "enabled": true } } },
-  "agents": { "defaults": { "model": { "primary": "openai/gpt-5.2" } } },
-  "auth": { "profiles": { "openai:default": { "provider": "openai", "mode": "api_key" } } }
-}
-```
-
-```bash
-export OPENAI_API_KEY="sk-xxxxxxxxxxxxxxxx"
-```
+> 向导会自动完成：创建 `~/.openclaw/` 目录、配置 AI 模型、安装系统服务。
+> 如果后续想换模型，编辑 `~/.openclaw/openclaw.json` 中的 `agents.defaults.model.primary` 字段即可。
 
 ---
 
-## 3. 接入企业微信
+## 2. 接入企业微信
 
-### 3.1 创建企业微信智能机器人
+### 2.1 创建企业微信智能机器人
 
 1. 登录 [企业微信管理后台](https://work.weixin.qq.com/wework_admin)
 2. 进入 **应用管理 → 智能机器人**
@@ -138,7 +70,7 @@ export OPENAI_API_KEY="sk-xxxxxxxxxxxxxxxx"
    - **Bot ID**（机器人 ID）
    - **Secret**（机器人密钥）
 
-### 3.2 配置回调地址
+### 2.2 配置回调地址
 
 在机器人详情页配置 **回调 URL**：
 
@@ -148,7 +80,7 @@ https://<你的服务器域名>:18789/plugins/wecom/agent
 
 > 本地开发用 ngrok：`ngrok http 18789`，把生成的 https 地址填到回调 URL。或用 Tailscale Funnel。
 
-### 3.3 配置 openclaw.json
+### 2.3 配置 openclaw.json
 
 ```json
 {
@@ -175,7 +107,7 @@ https://<你的服务器域名>:18789/plugins/wecom/agent
 
 > OpenClaw 启动时会自动安装 `wecom-openclaw-plugin`，无需手动 npm install。
 
-### 3.4 启动和测试
+### 2.4 启动和测试
 
 ```bash
 # 安装 Gateway 服务（Windows 上用 schtasks，macOS 用 launchd，Linux 用 systemd）
@@ -197,7 +129,7 @@ openclaw gateway run
 
 ---
 
-## 4. 部署本工作区
+## 3. 部署本工作区
 
 ```bash
 # 备份原工作区（如果有的话）
@@ -226,11 +158,11 @@ workspace/
 
 ---
 
-## 5. 配置腾讯文档
+## 4. 配置腾讯文档
 
 腾讯文档通过 **mcporter** 代理 MCP 协议，需要注册 4 个 MCP 服务 + 获取 Token。
 
-### 5.1 安装 mcporter
+### 4.1 安装 mcporter
 
 ```bash
 npm install -g mcporter@0.8.1
@@ -238,7 +170,7 @@ mcporter --version
 # → 0.8.1
 ```
 
-### 5.2 一键授权（推荐）
+### 4.2 一键授权（推荐）
 
 workspace 内置了自动化脚本，一次性完成 Token 获取 + 4 个 MCP 服务注册：
 
@@ -258,7 +190,7 @@ bash ./setup.sh tdoc_fetch_token
 
 > 这一步会自动注册 `tencent-saas-docs`、`slide-mcp`、`doc-mcp`、`sheet-mcp` 四个 MCP 服务。
 
-### 5.3 手动设置（跳过 OAuth）
+### 4.3 手动设置（跳过 OAuth）
 
 已知 Token，直接一步注册：
 
@@ -286,7 +218,7 @@ mcporter config add "sheet-mcp" "https://saas.docs.qq.com/api/v6/sheet/mcp" \
 
 > Token 获取地址：[https://saas.docs.qq.com/scenario/open-claw.html?nlc=1](https://saas.docs.qq.com/scenario/open-claw.html?nlc=1)
 
-### 5.4 验证
+### 4.4 验证
 
 ```bash
 mcporter list
@@ -297,7 +229,7 @@ mcporter call "tencent-saas-docs" "smartsheet.list_records" \
 # 正常返回 JSON 则一切就绪
 ```
 
-### 5.5 故障排查
+### 4.5 故障排查
 
 | 错误码 | 原因 | 解决 |
 |--------|------|------|
@@ -305,24 +237,28 @@ mcporter call "tencent-saas-docs" "smartsheet.list_records" \
 | `400007` | 调用次数耗尽 | 升级腾讯文档专业版 |
 | `expired` | Token 过期 | 重新获取 |
 | `not_authorized` | 未完成扫码 | 在浏览器中完成授权 |
-| Windows 上跑不了 bash | 没装 Git Bash | 用第 5.3 节手动 mcporter 命令代替 |
+| Windows 上跑不了 bash | 没装 Git Bash | 用第 4.3 节手动 mcporter 命令代替 |
 
 ---
 
-## 6. 启动 & 验证
+## 5. 启动 & 验证
 
-### 6.1 启动 Gateway
+### 5.1 确认 Gateway 运行中
 
 ```bash
-# 安装系统服务后启动（推荐，开机自启）
-openclaw daemon install
-openclaw daemon start
-
-# 或者前台运行（调试用，看实时日志）
-openclaw gateway run --verbose
+openclaw gateway status
+# 应显示 Gateway 正在运行（running）
 ```
 
-### 6.2 健康检查
+> `openclaw onboard --install-daemon` 已自动安装并启动了系统服务，正常情况下开机自启，无需手动操作。
+
+如果 Gateway 没运行：
+
+```bash
+openclaw daemon start
+```
+
+### 5.2 健康检查
 
 ```bash
 openclaw health
@@ -336,11 +272,11 @@ Gateway event loop: ok
 Agents: main (default)
 ```
 
-### 6.3 企微消息测试
+### 5.3 企微消息测试
 
 在企业微信里 @机器人 发送 `月度复盘`，应自动拉数据并返回漏斗统计。
 
-### 6.4 查看 Skill 加载情况
+### 5.4 查看 Skill 加载情况
 
 ```bash
 openclaw sessions list
@@ -350,7 +286,7 @@ openclaw sessions list
 
 ---
 
-## 7. 日常使用
+## 6. 日常使用
 
 ### 数据录入
 
@@ -415,4 +351,4 @@ A:
 
 **Q: Windows 上 setup.sh 跑不了？**
 
-A: 安装 [Git Bash](https://git-scm.com) 后在 Git Bash 终端中运行。或者直接用第 5.3 节的手动 mcporter 命令，跳过 setup.sh。
+A: 安装 [Git Bash](https://git-scm.com) 后在 Git Bash 终端中运行。或者直接用第 4.3 节的手动 mcporter 命令，跳过 setup.sh。
