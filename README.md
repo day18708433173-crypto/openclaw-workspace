@@ -60,50 +60,7 @@ openclaw gateway status
 
 ## 2. 接入企业微信
 
-参考官方文档：[在本地终端部署 OpenClaw 并关联机器人](https://open.work.weixin.qq.com/help2/pc/cat?doc_id=21657)
-
-### 2.1 创建企业微信智能机器人
-
-1. 登录 [企业微信管理后台](https://work.weixin.qq.com/wework_admin)
-2. 进入 **应用管理 → 智能机器人**
-3. 点击 **创建智能机器人**，选择 **Agent 模式**
-4. 创建完成后，在机器人详情页找到 **关联 OpenClaw** 区域
-5. 点击 **复制关联命令**，得到一条类似如下的命令：
-
-```
-openclaw channels add wecom --bot-id xxx --secret xxx --token xxx --aes-key xxx
-```
-
-> 这条命令由企业微信后台自动生成，已包含你的 Bot ID、Secret 等信息，无需手动填写。
-
-### 2.2 在本地终端执行关联命令
-
-在 PowerShell 中粘贴并执行刚才复制的命令：
-
-```powershell
-openclaw channels add wecom --bot-id xxx --secret xxx --token xxx --aes-key xxx
-```
-
-> 这一步会自动完成：启用 `wecom-openclaw-plugin` 插件、写入 `channels.wecom` 配置到 `openclaw.json`。
-
-### 2.3 配置回调地址（如需要）
-
-如果机器人需要接收消息回调，在管理后台配置 **回调 URL**：
-
-```
-https://<你的服务器域名>:18789/plugins/wecom/agent
-```
-
-> 本地开发用 ngrok：`ngrok http 18789`，把生成的 https 地址填入回调 URL。
-
-### 2.4 验证
-
-```bash
-openclaw health
-# → 企业微信: configured ✓
-```
-
-在企业微信里 @机器人 发一条消息，收到回复即为接入成功。
+参考企业微信官方文档 **2.2.2 章节**：[在本地终端部署 OpenClaw 并关联机器人](https://open.work.weixin.qq.com/help2/pc/cat?doc_id=21657)
 
 ---
 
