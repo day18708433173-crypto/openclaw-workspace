@@ -72,6 +72,8 @@ mcporter / MCP 协议
 
 ![](images/demo_04.png)
 
+![](images/demo_05.png)
+
 ---
 
 ## 部署指南
@@ -133,4 +135,3 @@ git clone https://github.com/day18708433173-crypto/openclaw-workspace.git ~/.ope
 ```
 
 克隆后，自行更改tools.md文件中所关联的腾讯文档。
-
