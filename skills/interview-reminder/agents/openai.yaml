@@ -1,0 +1,4 @@
+interface:
+  display_name: "面试提醒助手"
+  short_description: "每天九点汇总当天面试，并提醒尚未安排下一轮的候选人"
+  default_prompt: "Use $interview-reminder to generate the interview-only morning reminder."

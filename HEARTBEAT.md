@@ -1,5 +1,5 @@
-<!-- Heartbeat template; comments-only content prevents scheduled heartbeat API calls. -->
+<!-- 心跳模板：仅注释/标题、无实质任务时，会跳过定时 heartbeat 的 API 调用。 -->
 
-# Keep this file empty (or with only comments) to skip heartbeat API calls.
+# 保持本文件为空（或只有注释/标题）可跳过 heartbeat API 调用。
 
-# Add tasks below when you want the agent to check something periodically.
+# 若希望 Agent 定期检查事项，在下方添加任务清单（不要只用标题）。

@@ -49,21 +49,28 @@ mcporter / MCP 协议
 | **转化漏斗** | `月度复盘` / `季度复盘` | 初筛→一面→二面→OFFER 各阶段通过率 |
 | **渠道分析** | `渠道统计 2026年7月` | BOSS/猎聘/内推/校招 转化效果对比 |
 
+### 自创 Skills
+
+通用大模型能够理解自然语言，但招聘业务还涉及固定字段映射、查重规则、统计口径、时间边界和图表输出。将高频流程封装为 Skill，可以把业务规则沉淀为可复用、可审计的标准操作，减少重复提示和模型自由发挥，让同一类请求每次都按一致口径执行。
+
+| Skill | 简介 | 发挥作用的场景 |
+|------|------|----------------|
+| **`basic-information`** | 解析近时段上传的一份或多份简历 PDF，提取候选人信息，校验必填项并查重后写入招聘智能表 | HR 批量收到简历后，在企微中发出“录入基本信息”指令，减少手工录表 |
+| **`channel-stats`** | 按指定周期统计 BOSS、猎聘、内推、校招等渠道的投递量与 OFFER 转化率，输出一句结论和渠道对比图 | 月度渠道复盘、招聘预算分配、识别高效或低效候选人来源 |
+| **`funnel-stats`** | 统一计算初筛、一面、二面、OFFER 各阶段人数和通过率，定位流失最明显的环节并生成漏斗图 | 月度、季度招聘复盘，校准筛选标准与面试流程 |
+| **`hc-stats`** | 按岗位对比目标 HC、已接受 OFFER、在途候选人与剩余缺口，生成岗位进度图 | HC 盘点、岗位优先级判断、识别候选人储备不足的岗位 |
+
 ### Demo 演示
 
 以下为系统在真实企业微信群中的实测截图：
 
-![](images/demo_3.png)
+![](images/demo_01.png)
 
-![](images/demo_2.png)
+![](images/demo_02.png)
 
-![](images/demo_1.png)
+![](images/demo_03.png)
 
-![](images/demo_0.png)
-
-![](images/demo_12.png)
-
-![](images/demo_11.png)
+![](images/demo_04.png)
 
 ---
 
@@ -103,6 +110,7 @@ openclaw gateway status
 ```
 
 > 如果后续想换模型，编辑 `~/.openclaw/openclaw.json` 中的 `agents.defaults.model.primary` 字段。
+> 记得在配置channel的时候选择skip，后续按照企业微信官方文档流程接入企业微信更方便。
 
 ### 2. 接入企业微信
 
@@ -124,20 +132,5 @@ mv ~/.openclaw/workspace ~/.openclaw/workspace.bak 2>/dev/null
 git clone https://github.com/day18708433173-crypto/openclaw-workspace.git ~/.openclaw/workspace
 ```
 
-克隆后 `~/.openclaw/workspace/` 目录结构：
+克隆后，自行更改tools.md文件中所关联的腾讯文档。
 
-```
-workspace/
-├── AGENTS.md                           ← Agent 运行约定
-├── SOUL.md                             ← 角色定义（招聘助手）
-├── TOOLS.md                            ← 智能表字段映射
-├── MEMORY.md                           ← 跨会话持久记忆
-├── README.md                           ← 本文件
-├── 招聘提效场景AI应用方案.docx           ← 完整方案文档
-├── skills/
-│   ├── BasicInformation/SKILL.md       ← 简历解析 & 录入
-│   ├── recruitment-funnel/SKILL.md     ← 招聘漏斗复盘
-│   ├── recruitment-progress/SKILL.md   ← 岗位招聘进度
-│   ├── recruitment-channel/SKILL.md    ← 渠道来源统计
-│   └── tencent-saas-docs/              ← 腾讯文档 MCP 操作指南 & setup.sh
-```

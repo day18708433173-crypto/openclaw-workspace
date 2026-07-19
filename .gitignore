@@ -1,0 +1,12 @@
+# Runtime-generated artifacts
+/media/
+/.tmp/
+
+# One-off retry/debug files must not live in the workspace root
+/tmp_*.json
+/args_*.json
+/do_update*
+/update_*.cjs
+/update_*.mjs
+/call_mcp.cjs
+/analyze_*.cjs
